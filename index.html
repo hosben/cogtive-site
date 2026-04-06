@@ -255,12 +255,7 @@ nav {
 .pill-dot { width:5px; height:5px; border-radius:50%; background:var(--accent); }
 
 /* ── TRUSTED ── */
-.section-trusted {
-  padding: 54px 2.5rem;
-  border-top: 1px solid var(--border);
-  border-bottom: 1px solid var(--border);
-  background: rgba(0,0,0,0.18);
-}
+
 
 .trusted-label {
   font-size: 11px; font-weight: 600; letter-spacing: 2.5px;
@@ -268,15 +263,9 @@ nav {
   text-align: center; margin-bottom: 2rem;
 }
 
-.logos-row {
-  display: flex; justify-content: center;
-  align-items: center; gap: 3.5rem; flex-wrap: wrap;
-}
 
-.logo-item {
-  font-size: 12px; font-weight: 700; letter-spacing: 2px;
-  color: var(--mid-grey); text-transform: uppercase;
-}
+
+
 
 /* ── STATS ── */
 .section-stats {
@@ -667,7 +656,7 @@ footer {
   .section-faq { padding: 80px 2rem; }
   .section-end-cta { padding: 100px 2rem; }
   .section-cta-mid { padding: 80px 2rem; }
-  .section-trusted { padding: 48px 2rem; }
+  
   footer { padding: 4rem 2rem 2rem; }
   .hero { padding: 130px 2rem 90px; }
 
@@ -751,8 +740,8 @@ footer {
   .section-title { letter-spacing: -1px; }
 
   /* Trusted */
-  .section-trusted { padding: 40px 1.5rem; }
-  .logos-row { gap: 1.75rem; }
+  
+  
 
   /* Footer */
   footer { padding: 3rem 1.5rem 1.5rem; }
@@ -2257,6 +2246,95 @@ nav > a:first-child {
 @media (min-width: 1025px) {
   .nav-links { display: flex !important; }
 }
+
+/* ── CLIENT TICKER ── */
+.section-trusted {
+  padding: 56px 0;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  background: rgba(0,0,0,0.18);
+  overflow: hidden;
+}
+.trusted-label-wrap {
+  text-align: center;
+  margin-bottom: 2rem;
+  padding: 0 2.5rem;
+}
+.trusted-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+.ticker-outer {
+  overflow: hidden;
+  width: 100%;
+  position: relative;
+}
+/* fade edges */
+.ticker-outer::before,
+.ticker-outer::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 120px;
+  z-index: 2;
+  pointer-events: none;
+}
+.ticker-outer::before {
+  left: 0;
+  background: linear-gradient(to right, rgba(3,14,26,1) 0%, rgba(3,14,26,0) 100%);
+}
+.ticker-outer::after {
+  right: 0;
+  background: linear-gradient(to left, rgba(3,14,26,1) 0%, rgba(3,14,26,0) 100%);
+}
+.ticker-track {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  width: max-content;
+  animation: ticker-scroll 28s linear infinite;
+}
+.ticker-track:hover {
+  animation-play-state: paused;
+}
+.ticker-item {
+  font-family: var(--font-body, "Sora", sans-serif);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-secondary, #BBBBBB);
+  letter-spacing: 0.5px;
+  padding: 0 3rem;
+  white-space: nowrap;
+  position: relative;
+  transition: color 0.2s;
+}
+.ticker-item:hover {
+  color: var(--accent, #82C3FF);
+}
+/* separator dot between items */
+.ticker-item::after {
+  content: '·';
+  position: absolute;
+  right: 0;
+  transform: translateX(50%);
+  color: var(--border-mid, rgba(130,195,255,0.18));
+  font-size: 20px;
+  line-height: 1;
+}
+@keyframes ticker-scroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(calc(-100% / 3)); }
+}
+@media (max-width: 768px) {
+  .ticker-item { font-size: 13px; padding: 0 2rem; }
+  .ticker-outer::before,
+  .ticker-outer::after { width: 60px; }
+}
+
 </style>
 </head>
 <body>
@@ -2368,17 +2446,42 @@ nav > a:first-child {
 </section>
 
 <!-- ── TRUSTED BY ── -->
-<div class="section-trusted fade-in">
-  <div class="container">
+<div class="section-trusted">
+  <div class="trusted-label-wrap">
     <p class="trusted-label" data-i18n="trusted.label">Companies already optimizing with Cogtive</p>
-    <div class="logos-row">
-      <span class="logo-item">Eurofarma</span>
-      <span class="logo-item">Ourofino</span>
-      <span class="logo-item">Bosch</span>
-      <span class="logo-item">Ambev</span>
-      <span class="logo-item">Basf</span>
-      <span class="logo-item">Gerdau</span>
-      <span class="logo-item">Nestlé</span>
+  </div>
+  <div class="ticker-outer">
+    <div class="ticker-track">
+      <span class="ticker-item">Eurofarma</span>
+      <span class="ticker-item">Hypera</span>
+      <span class="ticker-item">Legrand</span>
+      <span class="ticker-item">Ourofino</span>
+      <span class="ticker-item">Coca-Cola</span>
+      <span class="ticker-item">FQM</span>
+      <span class="ticker-item">Kovi</span>
+      <span class="ticker-item">Acrilex</span>
+      <span class="ticker-item">Halexistar</span>
+      <span class="ticker-item">Apsen</span>
+      <span class="ticker-item">Eurofarma</span>
+      <span class="ticker-item">Hypera</span>
+      <span class="ticker-item">Legrand</span>
+      <span class="ticker-item">Ourofino</span>
+      <span class="ticker-item">Coca-Cola</span>
+      <span class="ticker-item">FQM</span>
+      <span class="ticker-item">Kovi</span>
+      <span class="ticker-item">Acrilex</span>
+      <span class="ticker-item">Halexistar</span>
+      <span class="ticker-item">Apsen</span>
+      <span class="ticker-item">Eurofarma</span>
+      <span class="ticker-item">Hypera</span>
+      <span class="ticker-item">Legrand</span>
+      <span class="ticker-item">Ourofino</span>
+      <span class="ticker-item">Coca-Cola</span>
+      <span class="ticker-item">FQM</span>
+      <span class="ticker-item">Kovi</span>
+      <span class="ticker-item">Acrilex</span>
+      <span class="ticker-item">Halexistar</span>
+      <span class="ticker-item">Apsen</span>
     </div>
   </div>
 </div>
