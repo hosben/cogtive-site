@@ -2190,6 +2190,73 @@ footer p{font-size:12px;color:var(--text-muted)}
   .next-section,footer{padding-left:1rem;padding-right:1rem}
 }
 
+
+/* ── Nav layout fix: links left-aligned near logo ── */
+nav {
+  display: flex;
+  align-items: center;
+  gap: 0;
+}
+.nav-logo-svg {
+  flex-shrink: 0;
+}
+nav > a:first-child {
+  flex-shrink: 0;
+  margin-right: 2rem;
+}
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  flex-shrink: 0;
+}
+.nav-links li a {
+  padding: 0 1rem;
+  font-size: 14px;
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s;
+  white-space: nowrap;
+}
+.nav-links li a:hover {
+  color: var(--accent);
+}
+.nav-spacer {
+  flex: 1;
+}
+
+
+/* ── NAV LAYOUT OVERRIDE: left-align nav-links near logo ── */
+nav {
+  justify-content: flex-start !important;
+  gap: 0 !important;
+}
+nav > a:first-child {
+  margin-right: 2rem;
+  flex-shrink: 0;
+}
+.nav-links {
+  flex-shrink: 0;
+  margin-right: 0;
+}
+.nav-spacer {
+  flex: 1 1 auto;
+  min-width: 1rem;
+}
+.nav-right {
+  flex-shrink: 0;
+  margin-left: auto;
+}
+@media (max-width: 1024px) {
+  .nav-links { display: none !important; }
+}
+@media (min-width: 1025px) {
+  .nav-links { display: flex !important; }
+}
 </style>
 </head>
 <body>
@@ -2220,6 +2287,7 @@ footer p{font-size:12px;color:var(--text-muted)}
     <li><a href="#testimonials" data-i18n="nav.clients">Clients</a></li>
     <li><a href="#faq">FAQ</a></li>
   </ul>
+  <div class="nav-spacer"></div>
 
   <div class="nav-right">
     <!-- Language Switcher -->
@@ -2287,7 +2355,7 @@ footer p{font-size:12px;color:var(--text-muted)}
 
   <div class="hero-ctas">
     <a href="https://cogtive.com/contact/" class="btn btn-lg btn-accent" data-i18n="hero.cta1">Schedule a Demo ↗</a>
-    <a href="https://cogtive.com/taelor/" class="btn btn-lg btn-outline" data-i18n="hero.cta2">Meet TÆLOR AI →</a>
+    <a href="#" onclick="showPage('taelor');return false;" class="btn btn-lg btn-outline" data-i18n="hero.cta2">Meet TÆLOR AI →</a>
   </div>
 
   <div class="hero-pills">
@@ -2359,32 +2427,32 @@ footer p{font-size:12px;color:var(--text-muted)}
     </div>
 
     <div class="products-grid fade-in">
-      <a href="https://cogtive.com/oee/" class="product-card">
+      <a href="#" onclick="showPage('oee');return false;" class="product-card">
         <h3>OEE</h3>
         <p data-i18n="prod.oee">Real-time equipment effectiveness monitoring. Track downtime reasons, MTTR, MTBF, MWT, and FIFO status with complete visibility.</p>
         <span class="product-arrow" data-i18n="prod.more">Learn more →</span>
       </a>
-      <a href="https://cogtive.com/flow-view/" class="product-card">
+      <a href="#" onclick="showPage('flowview');return false;" class="product-card">
         <h3>Flow View</h3>
         <p data-i18n="prod.flow">Digital twin of your production flow. Track batch movements, holding time, and equipment queues with phase-level predictability.</p>
         <span class="product-arrow" data-i18n="prod.more">Learn more →</span>
       </a>
-      <a href="https://cogtive.com/pace-management/" class="product-card">
+      <a href="#" onclick="showPage('pace');return false;" class="product-card">
         <h3>Pace Management</h3>
         <p data-i18n="prod.pace">Know if batches in process will meet delivery targets. Monitor WIP, SKU stock, and production fulfillment from a single view.</p>
         <span class="product-arrow" data-i18n="prod.more">Learn more →</span>
       </a>
-      <a href="https://cogtive.com/smart-setup/" class="product-card">
+      <a href="#" onclick="showPage('setup');return false;" class="product-card">
         <h3>Smart Setup</h3>
         <p data-i18n="prod.setup">Standardize changeovers with step-by-step guidance. Monitor adjustments and track ramp-up availability to maximize OEE impact.</p>
         <span class="product-arrow" data-i18n="prod.more">Learn more →</span>
       </a>
-      <a href="https://cogtive.com/ia-vision/" class="product-card">
+      <a href="#" onclick="showPage('aivision');return false;" class="product-card">
         <h3>AI Vision</h3>
         <p data-i18n="prod.vision">Camera-based video recognition for workstation analysis. Identify idle time and labor underutilization in real time.</p>
         <span class="product-arrow" data-i18n="prod.more">Learn more →</span>
       </a>
-      <a href="https://cogtive.com/taelor/" class="product-card">
+      <a href="#" onclick="showPage('taelor');return false;" class="product-card">
         <h3>TÆLOR</h3>
         <p data-i18n="prod.taelor">The only AI that analyzes your complete production dataset and delivers step-by-step optimization strategies. Ask from your phone.</p>
         <span class="product-arrow" data-i18n="prod.more">Learn more →</span>
@@ -2434,7 +2502,7 @@ footer p{font-size:12px;color:var(--text-muted)}
           <div class="check-item"><div class="check-icon">✓</div> <span data-i18n="taelor.c3">Available via smartphone, 24/7</span></div>
           <div class="check-item"><div class="check-icon">✓</div> <span data-i18n="taelor.c4">Answers grounded in your actual shop floor data</span></div>
         </div>
-        <a href="https://cogtive.com/taelor/" class="btn btn-lg btn-accent" data-i18n="taelor.cta">Learn about TÆLOR →</a>
+        <a href="#" onclick="showPage('taelor');return false;" class="btn btn-lg btn-accent" data-i18n="taelor.cta">Learn about TÆLOR →</a>
       </div>
 
       <div class="taelor-image-wrap fade-in">
@@ -2585,12 +2653,12 @@ footer p{font-size:12px;color:var(--text-muted)}
     <div class="footer-col">
       <h4 data-i18n="footer.products">Products</h4>
       <ul>
-        <li><a href="https://cogtive.com/oee/">OEE</a></li>
-        <li><a href="https://cogtive.com/flow-view/">Flow View</a></li>
-        <li><a href="https://cogtive.com/pace-management/">Pace Management</a></li>
-        <li><a href="https://cogtive.com/smart-setup/">Smart Setup</a></li>
-        <li><a href="https://cogtive.com/ia-vision/">AI Vision</a></li>
-        <li><a href="https://cogtive.com/taelor/">TÆLOR</a></li>
+        <li><a href="#" onclick="showPage('oee');return false;">OEE</a></li>
+        <li><a href="#" onclick="showPage('flowview');return false;">Flow View</a></li>
+        <li><a href="#" onclick="showPage('pace');return false;">Pace Management</a></li>
+        <li><a href="#" onclick="showPage('setup');return false;">Smart Setup</a></li>
+        <li><a href="#" onclick="showPage('aivision');return false;">AI Vision</a></li>
+        <li><a href="#" onclick="showPage('taelor');return false;">TÆLOR</a></li>
       </ul>
     </div>
     <div class="footer-col">
