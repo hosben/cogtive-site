@@ -2335,6 +2335,233 @@ nav > a:first-child {
   .ticker-outer::after { width: 60px; }
 }
 
+
+/* ══ BLOG PAGE ══ */
+.blog-hero {
+  padding: 130px 2.5rem 72px;
+  position: relative;
+}
+.blog-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 600px 400px at 50% -10%, rgba(0,91,175,0.22) 0%, transparent 70%);
+  pointer-events: none;
+}
+.blog-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 1rem;
+}
+.blog-title {
+  font-size: clamp(40px, 6vw, 80px);
+  font-weight: 800;
+  letter-spacing: -2.5px;
+  line-height: 1;
+  margin-bottom: 1rem;
+  color: var(--text-primary);
+}
+.blog-subtitle {
+  font-size: 18px;
+  color: var(--text-secondary);
+  font-weight: 300;
+  line-height: 1.7;
+  max-width: 580px;
+}
+
+/* Posts section */
+.blog-posts-section {
+  padding: 16px 2.5rem 96px;
+}
+.blog-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 5rem 0;
+  color: var(--text-muted);
+  font-size: 14px;
+}
+.blog-spinner {
+  width: 36px;
+  height: 36px;
+  border: 2px solid var(--border-mid);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.blog-error {
+  text-align: center;
+  padding: 4rem 0;
+  color: var(--text-muted);
+  font-size: 14px;
+}
+.blog-error a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+/* Grid */
+.blog-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+.blog-card {
+  background: rgba(2,129,248,0.06);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  transition: border-color 0.2s, transform 0.2s, background 0.2s;
+}
+.blog-card:hover {
+  border-color: var(--accent-border);
+  background: rgba(2,129,248,0.11);
+  transform: translateY(-3px);
+}
+.blog-card-thumb {
+  width: 100%;
+  aspect-ratio: 16/9;
+  object-fit: cover;
+  display: block;
+  background: rgba(0,91,175,0.15);
+}
+.blog-card-thumb-placeholder {
+  width: 100%;
+  aspect-ratio: 16/9;
+  background: linear-gradient(135deg, rgba(0,91,175,0.2) 0%, rgba(130,195,255,0.08) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.blog-card-thumb-icon {
+  font-size: 32px;
+  opacity: 0.3;
+}
+.blog-card-body {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+.blog-card-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 0.75rem;
+}
+.blog-card-date {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+}
+.blog-card-tag {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--accent);
+  background: rgba(130,195,255,0.1);
+  border: 1px solid rgba(130,195,255,0.2);
+  border-radius: 100px;
+  padding: 2px 8px;
+}
+.blog-card h3 {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.4;
+  letter-spacing: -0.3px;
+  margin-bottom: 0.625rem;
+  flex: 1;
+}
+.blog-card p {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.65;
+  font-weight: 300;
+  margin-bottom: 1.25rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.blog-card-link {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--accent);
+  letter-spacing: 0.3px;
+  margin-top: auto;
+}
+
+/* Load more */
+.blog-more-wrap {
+  text-align: center;
+  padding-top: 3rem;
+}
+.blog-more-btn {
+  background: transparent;
+  border: 1px solid var(--border-mid);
+  color: var(--text-primary);
+  padding: 12px 32px;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 9px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.blog-more-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* Blog CTA */
+.blog-cta-section {
+  padding: 96px 2.5rem;
+  text-align: center;
+  border-top: 1px solid var(--border);
+  background: rgba(0,91,175,0.06);
+}
+.blog-cta-inner {
+  max-width: 560px;
+  margin: 0 auto;
+}
+.blog-cta-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 1rem;
+}
+.blog-cta-inner h2 {
+  font-size: clamp(28px, 4vw, 48px);
+  font-weight: 800;
+  letter-spacing: -1.5px;
+  margin-bottom: 2rem;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .blog-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 580px) {
+  .blog-grid { grid-template-columns: 1fr; }
+  .blog-hero { padding: 100px 1.5rem 56px; }
+  .blog-posts-section { padding-left: 1.5rem; padding-right: 1.5rem; }
+}
+
 </style>
 </head>
 <body>
@@ -2364,6 +2591,7 @@ nav > a:first-child {
     <li><a href="#taelor">TÆLOR AI</a></li>
     <li><a href="#testimonials" data-i18n="nav.clients">Clients</a></li>
     <li><a href="#faq">FAQ</a></li>
+    <li><a href="#" onclick="showPage('blog');return false;" data-i18n="nav.blog">Blog</a></li>
   </ul>
   <div class="nav-spacer"></div>
 
@@ -2414,6 +2642,7 @@ nav > a:first-child {
   <a href="#taelor" onclick="closeMobileNav()">TÆLOR AI</a>
   <a href="#testimonials" data-i18n="nav.clients" onclick="closeMobileNav()">Clients</a>
   <a href="#faq" onclick="closeMobileNav()">FAQ</a>
+  <a href="#" onclick="showPage('blog');closeMobileNav();return false;" data-i18n="nav.blog">Blog</a>
   <div class="nav-drawer-ctas">
     <a href="https://cogtive.com/contact/" class="btn btn-sm btn-ghost" data-i18n="nav.contact" onclick="closeMobileNav()">Contact</a>
     <a href="https://cogtive.com/contact/" class="btn btn-sm btn-accent" data-i18n="nav.demo" onclick="closeMobileNav()">Request a Demo ↗</a>
@@ -4286,7 +4515,103 @@ smartphone, 24/7</div></div>
 
 </div><!-- end page-taelor -->
 
+
+<!-- ╔══ PAGE: BLOG ══╗ -->
+<div id="page-blog" class="spa-page">
+
+<nav>
+  <a href="#" onclick="showPage('home');return false;"><svg class="nav-logo-svg" viewBox="0 0 1920 401.75" xmlns="http://www.w3.org/2000/svg" fill="#82C3FF">
+      <path d="M277.37,74.98c5.39,0,7.91,2.52,7.91,7.91v35.25c0,5.39-2.52,8.28-7.91,8.28H117.31c-37.05,0-47.83,10.79-47.83,48.92v51.07c0,38.12,10.78,49.27,47.83,49.27h160.06c5.39,0,7.91,2.52,7.91,7.91v35.25c0,5.39-2.52,7.91-7.91,7.91H115.16c-72.65,0-100.71-25.9-100.71-94.95v-61.87c0-69.06,28.05-94.95,100.71-94.95h162.22Z"/>
+      <path d="M919.92,74.98c5.39,0,7.91,2.52,7.91,7.91v35.25c0,5.39-2.52,8.28-7.91,8.28h-180.2c-37.04,0-47.83,10.79-47.83,48.92v51.79c0,38.12,10.78,49.27,47.83,49.27h118.7c12.58,0,17.99-5.76,17.99-21.94v-29.14c0-3.24-1.08-4.67-4.32-4.67h-105.38c-5.04,0-7.91-2.87-7.91-8.28v-26.97c0-5.39,2.87-8.28,7.91-8.28h149.99c7.19,0,10.78,3.6,10.78,10.79v83.8c0,40.29-15.82,55.03-44.6,55.03h-145.31c-72.65,0-100.71-25.9-100.71-94.95v-61.87c0-69.06,28.05-94.95,100.71-94.95h182.35Z"/>
+      <path d="M1176.57,74.98c5.39,0,8.28,2.52,8.28,7.91v35.25c0,5.39-2.87,8.28-8.28,8.28h-82.97v192.43c0,5.39-2.52,7.91-7.91,7.91h-39.21c-5.39,0-7.91-2.52-7.91-7.91V126.42h-82.97c-5.39,0-8.28-2.87-8.28-8.28v-35.25c0-5.39,2.87-7.91,8.28-7.91h220.96Z"/>
+      <path d="M1251.46,74.98c5.39,0,7.92,2.52,7.92,7.91v235.96c0,5.39-2.52,7.91-7.92,7.91h-38.84c-5.39,0-8.28-2.52-8.28-7.91V82.89c0-5.39,2.87-7.91,8.28-7.91h38.84Z"/>
+      <path d="M1330.14,74.98c4.68,0,6.48,1.44,8.28,4.68l105.38,193.51c1.08,2.15,2.16,2.52,4.32,2.52h1.8c1.8,0,2.87-.36,3.95-2.52l103.95-193.51c1.8-3.59,3.96-4.68,8.28-4.68h47.12c5.76,0,6.83,3.59,4.32,8.28l-117.98,216.17c-11.88,21.95-22.67,27.34-37.77,27.34h-20.86c-18.71,0-29.14-5.39-41.36-27.34l-119.41-216.17c-2.52-4.68-1.44-8.28,4.67-8.28h45.32-.01Z"/>
+      <path d="M1846.78,213.82v-28.42c0-4.37-2.38-7.91-5.33-7.91h-96.52c-8.23,0-14.9,9.9-14.9,22.12s6.67,22.12,14.9,22.12h96.52c2.94,0,5.33-3.54,5.33-7.91h0Z"/>
+      <path d="M1905.55,117.07v-34.17c0-5.39-2.87-7.91-8.28-7.91h-158.27c-72.65,0-100.71,25.9-100.71,94.95v61.87c0,69.06,28.05,94.95,100.71,94.95h158.27c5.39,0,8.28-2.52,8.28-7.91v-34.17c0-5.39-2.87-7.91-8.28-7.91h-157.19c-37.4,0-47.83-11.15-47.83-48.92v-53.95c0-37.77,10.43-48.92,47.83-48.92h157.19c5.39,0,8.28-2.52,8.28-7.91Z"/>
+      <path d="M359.82,177.49v-3.59c0-37.77,10.78-48.92,47.83-48.92h106.83c37.05,0,47.83,11.15,47.83,48.92v3.59h55.03v-7.56c0-69.06-27.7-94.95-100.72-94.95h-111.14c-72.65,0-100.71,25.9-100.71,94.95v7.56h55.04Z"/>
+      <path d="M562.33,221.73v6.11c0,37.77-10.78,48.92-47.83,48.92h-106.83c-37.05,0-47.83-11.15-47.83-48.92v-6.11h-55.03v10.07c0,69.06,28.05,94.95,100.71,94.95h111.14c73.02,0,100.72-25.9,100.72-94.95v-10.07h-55.04Z"/>
+    </svg></a>
+  <ul class="nav-links">
+    <li><a href="#" onclick="showPage('home');return false;">Home</a></li>
+    <li><a href="#" onclick="showPage('home');scrollToId('products');return false;">Products</a></li>
+    <li><a href="#" onclick="showPage('blog');return false;" style="color:var(--accent)">Blog</a></li>
+  </ul>
+  <div class="nav-spacer"></div>
+  <div class="nav-right">
+    <div class="lang-switcher" id="langSwitcherBlog">
+      <button class="lang-btn" onclick="this.closest('.lang-switcher').classList.toggle('open');return false;">
+        <svg class="lang-globe" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+        <span id="currentLangLabelBlog">EN</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="lang-dropdown">
+        <a class="lang-option active" onclick="setLang('en')" href="#">🇺🇸 English</a>
+        <div class="lang-divider"></div>
+        <a class="lang-option" onclick="setLang('pt')" href="#">🇧🇷 Português (BR)</a>
+        <a class="lang-option" onclick="setLang('es')" href="#">🇪🇸 Español</a>
+        <a class="lang-option" onclick="setLang('fr')" href="#">🇫🇷 Français</a>
+        <a class="lang-option" onclick="setLang('de')" href="#">🇩🇪 Deutsch</a>
+      </div>
+    </div>
+    <a href="https://cogtive.com/contact/" class="btn btn-sm btn-accent">Request a Demo</a>
+  </div>
+</nav>
+
+<!-- BLOG HERO -->
+<section class="blog-hero">
+  <div class="container">
+    <div class="fade-in">
+      <span class="blog-label">From the team</span>
+      <h1 class="blog-title">Cogtive <span class="hl">Blog</span></h1>
+      <p class="blog-subtitle">Insights on manufacturing intelligence, operational excellence, and industrial AI — from the team building it.</p>
+    </div>
+  </div>
+</section>
+
+<!-- BLOG POSTS GRID -->
+<section class="blog-posts-section">
+  <div class="container">
+    <!-- Loading state -->
+    <div id="blog-loading" class="blog-loading">
+      <div class="blog-spinner"></div>
+      <p>Loading posts from Medium...</p>
+    </div>
+    <!-- Error state -->
+    <div id="blog-error" class="blog-error" style="display:none">
+      <p>Could not load posts right now. <a href="https://medium.com/@cogtive-blog" target="_blank" rel="noopener">Read directly on Medium ↗</a></p>
+    </div>
+    <!-- Posts grid -->
+    <div id="blog-grid" class="blog-grid" style="display:none"></div>
+    <!-- Load more -->
+    <div id="blog-more-wrap" class="blog-more-wrap" style="display:none">
+      <button id="blog-more-btn" class="btn blog-more-btn" onclick="loadMorePosts()">Load more posts</button>
+    </div>
+  </div>
+</section>
+
+<!-- BLOG CTA -->
+<section class="blog-cta-section">
+  <div class="blog-cta-inner fade-in">
+    <p class="blog-cta-label">Follow all our content</p>
+    <h2>Read more on <span class="hl">Medium</span></h2>
+    <a href="https://medium.com/@cogtive-blog" target="_blank" rel="noopener" class="btn btn-lg btn-accent">
+      Follow @cogtive-blog on Medium ↗
+    </a>
+  </div>
+</section>
+
+<!-- FOOTER (blog page) -->
+<footer style="background:rgba(0,0,0,.28);border-top:1px solid var(--border);padding:2rem 2.5rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;">
+  <p style="font-size:12px;color:var(--text-muted)">© 2026 Cogtive. All rights reserved.</p>
+  <a href="#" onclick="showPage('home');return false;" style="font-size:12px;color:var(--text-muted);text-decoration:none;">← Back to home</a>
+</footer>
+
+</div><!-- end page-blog -->
+
 <script>
+// === TRANSLATIONS: blog ===
+const TRANS_blog = { en:{}, pt:{}, es:{}, fr:{}, de:{} };
+
 // === TRANSLATIONS: home ===
 const TRANS_home = {
 en: {
@@ -8362,6 +8687,7 @@ en: {
 
 // Translation tables (namespaced per page)
 const PAGE_TRANS = {
+  blog: TRANS_blog,
   home: TRANS_home,
   oee:  TRANS_oee,
   flowview: TRANS_flowview,
@@ -8479,6 +8805,133 @@ document.addEventListener('DOMContentLoaded', () => {
   const startPage = (hash && valid.includes(hash)) ? hash : 'home';
   showPage(startPage);
 });
+
+
+// ── Blog: Medium RSS integration ──────────────────────────────────────────
+const MEDIUM_RSS = 'https://medium.com/feed/@cogtive-blog';
+const RSS2JSON   = 'https://api.rss2json.com/v1/api.json?rss_url=' + encodeURIComponent(MEDIUM_RSS) + '&api_key=&count=30';
+
+let allPosts    = [];
+let visibleCount = 0;
+const PAGE_SIZE  = 9;
+
+function formatDate(dateStr) {
+  const d = new Date(dateStr);
+  return d.toLocaleDateString('en-US', { year:'numeric', month:'short', day:'numeric' });
+}
+
+function stripHtml(html) {
+  const div = document.createElement('div');
+  div.innerHTML = html;
+  return div.textContent || div.innerText || '';
+}
+
+function extractThumb(item) {
+  // Try thumbnail field
+  if (item.thumbnail && item.thumbnail.startsWith('http')) return item.thumbnail;
+  // Try og:image inside content
+  const imgMatch = item.content && item.content.match(/<img[^>]+src="([^"]+)"/);
+  if (imgMatch) return imgMatch[1];
+  return null;
+}
+
+function extractCategory(item) {
+  if (item.categories && item.categories.length > 0) {
+    return item.categories[0];
+  }
+  return 'Article';
+}
+
+function buildCard(item) {
+  const thumb = extractThumb(item);
+  const desc  = stripHtml(item.description || '').substring(0, 200).trim();
+  const date  = formatDate(item.pubDate);
+  const tag   = extractCategory(item);
+  const title = item.title || 'Untitled';
+  const url   = item.link  || '#';
+
+  const thumbHtml = thumb
+    ? `<img class="blog-card-thumb" src="${thumb}" alt="${title.replace(/"/g,'')}" loading="lazy" onerror="this.style.display='none'">`
+    : `<div class="blog-card-thumb-placeholder"><span class="blog-card-thumb-icon">✦</span></div>`;
+
+  return `
+    <a class="blog-card" href="${url}" target="_blank" rel="noopener">
+      ${thumbHtml}
+      <div class="blog-card-body">
+        <div class="blog-card-meta">
+          <span class="blog-card-date">${date}</span>
+          <span class="blog-card-tag">${tag}</span>
+        </div>
+        <h3>${title}</h3>
+        <p>${desc}</p>
+        <span class="blog-card-link">Read on Medium ↗</span>
+      </div>
+    </a>`;
+}
+
+function renderPosts(posts, append) {
+  const grid = document.getElementById('blog-grid');
+  if (!grid) return;
+  const html = posts.map(buildCard).join('');
+  if (append) {
+    grid.innerHTML += html;
+  } else {
+    grid.innerHTML = html;
+  }
+  grid.style.display = 'grid';
+}
+
+function loadMorePosts() {
+  const next = allPosts.slice(visibleCount, visibleCount + PAGE_SIZE);
+  renderPosts(next, true);
+  visibleCount += next.length;
+  const btn = document.getElementById('blog-more-wrap');
+  if (btn) btn.style.display = visibleCount >= allPosts.length ? 'none' : 'block';
+}
+
+async function loadBlogPosts() {
+  const loading = document.getElementById('blog-loading');
+  const error   = document.getElementById('blog-error');
+  const grid    = document.getElementById('blog-grid');
+  const moreWrap = document.getElementById('blog-more-wrap');
+
+  try {
+    const res  = await fetch(RSS2JSON);
+    if (!res.ok) throw new Error('Network error');
+    const data = await res.json();
+
+    if (data.status !== 'ok' || !data.items || data.items.length === 0) {
+      throw new Error('No posts found');
+    }
+
+    allPosts = data.items;
+    visibleCount = 0;
+
+    if (loading) loading.style.display = 'none';
+
+    const first = allPosts.slice(0, PAGE_SIZE);
+    renderPosts(first, false);
+    visibleCount = first.length;
+
+    if (moreWrap) {
+      moreWrap.style.display = allPosts.length > PAGE_SIZE ? 'block' : 'none';
+    }
+
+  } catch (err) {
+    console.warn('Blog load failed:', err);
+    if (loading) loading.style.display = 'none';
+    if (error)   error.style.display   = 'block';
+  }
+}
+
+// Load posts whenever blog page becomes active
+const _origShowPage = showPage;
+showPage = function(pageKey) {
+  _origShowPage(pageKey);
+  if (pageKey === 'blog' && allPosts.length === 0) {
+    loadBlogPosts();
+  }
+};
 
 </script>
 </body>
