@@ -2291,6 +2291,13 @@ footer p{font-size:12px;color:var(--text-muted)}
   .next-section,footer{padding-left:1rem;padding-right:1rem}
 }
 
+
+/* ── Blog error state ── */
+.blog-error-inner { max-width: 520px; margin: 0 auto; text-align: center; padding: 3rem 0; }
+.blog-error-msg { font-size: 17px; font-weight: 600; color: var(--text-primary); margin-bottom: .625rem; }
+.blog-error-sub { font-size: 14px; color: var(--text-muted); line-height: 1.6; margin-bottom: 2rem; }
+.blog-error-actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+
 </style>
 </head>
 <body>
@@ -10418,105 +10425,191 @@ function downloadRawText(textareaId, filename) {
   a.click();
 }
 
-// ─── Blog: Medium RSS (multi-proxy) ───────────────────────────────────────
+// ─── Blog: Medium RSS ────────────────────────────────────────────────────
 const MEDIUM_USER = 'cogtive-blog';
-const MEDIUM_FEED = 'https://medium.com/feed/@' + MEDIUM_USER;
-const RSS_PROXIES = [
-  () => fetch('https://api.rss2json.com/v1/api.json?rss_url=' + encodeURIComponent(MEDIUM_FEED) + '&count=30')
-        .then(r => r.json())
-        .then(d => { if (d.status!=='ok'||!d.items?.length) throw new Error(d.message||'empty'); return d.items.map(normalizeItem); }),
-  () => fetch('https://api.allorigins.win/get?url=' + encodeURIComponent(MEDIUM_FEED))
-        .then(r => r.json()).then(d => parseXml(d.contents)),
-];
+const MEDIUM_FEED_URL = 'https://medium.com/feed/@' + MEDIUM_USER;
 
-let allPosts = [], visibleCount = 0;
-const PAGE_SIZE = 9;
-
-function normalizeItem(item) {
-  return {
-    title:   item.title || 'Untitled',
-    link:    item.link  || '#',
-    pubDate: item.pubDate,
-    thumb:   item.thumbnail || extractImg(item.content||''),
-    excerpt: strip(item.description||'').slice(0,200),
-    tag:     (item.categories&&item.categories[0]) || 'Article',
-  };
+// Four independent proxies tried in sequence
+function getRssProxies() {
+  const enc = encodeURIComponent(MEDIUM_FEED_URL);
+  return [
+    // 1. Cloudflare Worker — dedicated proxy, most reliable
+    {
+      name: 'cloudflare-worker',
+      fetch: () => fetch('https://cogtive-feed.bruno-fonseca-cbd.workers.dev/', { cache: 'no-cache' })
+        .then(r => r.text())
+        .then(xml => parseRSSXML(xml)),
+    },
+    // 2. rss2json — fallback
+    {
+      name: 'rss2json',
+      fetch: () => fetch(
+        'https://api.rss2json.com/v1/api.json?rss_url=' + enc + '&count=30',
+        { cache: 'no-cache' }
+      ).then(r => r.json()).then(d => {
+        if (d.status !== 'ok') throw new Error(d.message || 'rss2json error');
+        if (!d.items || d.items.length === 0) throw new Error('No posts returned');
+        return d.items.map(item => ({
+          title:   item.title,
+          link:    item.link,
+          pubDate: item.pubDate,
+          thumb:   item.thumbnail || grabImg(item.content || item.description || ''),
+          excerpt: plain(item.description || '').slice(0, 220),
+          tag:     item.categories?.[0] || 'Article',
+        }));
+      }),
+    },
+    // 3. allorigins — fallback
+    {
+      name: 'allorigins',
+      fetch: () => fetch(
+        'https://api.allorigins.win/get?url=' + enc,
+        { cache: 'no-cache' }
+      ).then(r => r.json()).then(d => parseRSSXML(d.contents)),
+    },
+    // 4. corsproxy — last resort
+    {
+      name: 'corsproxy',
+      fetch: () => fetch(
+        'https://corsproxy.io/?' + enc,
+        { cache: 'no-cache' }
+      ).then(r => r.text()).then(xml => parseRSSXML(xml)),
+    },
+  ];
 }
-function extractImg(html) {
+
+function grabImg(html) {
   const m = html.match(/<img[^>]+src=["']([^"']+)["']/);
-  return (m && m[1].startsWith('http')) ? m[1] : null;
+  return m && m[1].startsWith('http') ? m[1] : null;
 }
-function strip(html) {
-  const d = document.createElement('div'); d.innerHTML = html;
-  return d.textContent || '';
+function plain(html) {
+  const d = document.createElement('div');
+  d.innerHTML = html;
+  return (d.textContent || '').replace(/\s+/g, ' ').trim();
 }
-function parseXml(xml) {
-  if (!xml) throw new Error('empty');
-  const doc = new DOMParser().parseFromString(xml,'text/xml');
+function parseRSSXML(xml) {
+  if (!xml || xml.length < 50) throw new Error('Empty XML');
+  const doc = new DOMParser().parseFromString(xml, 'text/xml');
+  const parseErr = doc.querySelector('parsererror');
+  if (parseErr) throw new Error('XML parse error');
   const items = Array.from(doc.querySelectorAll('item'));
-  if (!items.length) throw new Error('no items');
+  if (!items.length) throw new Error('No <item> elements in feed');
   return items.map(el => {
-    const g = tag => el.querySelector(tag)?.textContent?.trim() || '';
-    const content = g('content:encoded') || g('description');
-    return { title:g('title'), link:g('link'), pubDate:g('pubDate'),
-             thumb:extractImg(content), excerpt:strip(content).slice(0,200),
-             tag:el.querySelector('category')?.textContent?.trim()||'Article' };
-  });
+    const g = (tag) => {
+      // Handle namespaced tags
+      const ns = el.getElementsByTagNameNS('*', tag.split(':').pop());
+      if (ns.length) return ns[0].textContent.trim();
+      const plain = el.querySelector(tag);
+      return plain ? plain.textContent.trim() : '';
+    };
+    const content = g('content:encoded') || g('encoded') || g('description');
+    return {
+      title:   g('title'),
+      link:    g('link') || el.querySelector('link')?.textContent?.trim() || '',
+      pubDate: g('pubDate'),
+      thumb:   grabImg(content),
+      excerpt: plain(content).slice(0, 220),
+      tag:     el.querySelector('category')?.textContent?.trim() || 'Article',
+    };
+  }).filter(p => p.title && p.link);
 }
+
 function fmtDate(s) {
-  try { return new Date(s).toLocaleDateString('en-US',{year:'numeric',month:'short',day:'numeric'}); } catch{return s;}
+  try {
+    return new Date(s).toLocaleDateString('en-US', { year:'numeric', month:'short', day:'numeric' });
+  } catch { return ''; }
 }
+
 function buildCard(p) {
   const thumb = p.thumb
-    ? `<img class="blog-card-thumb" src="${p.thumb}" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=\'blog-card-thumb-placeholder\'><span class=\'blog-card-thumb-icon\'>✦</span></div>'">`
+    ? `<img class="blog-card-thumb" src="${p.thumb}" alt="" loading="lazy" onerror="this.outerHTML='<div class=\"blog-card-thumb-placeholder\"><span class=\"blog-card-thumb-icon\">✦</span></div>'">`
     : '<div class="blog-card-thumb-placeholder"><span class="blog-card-thumb-icon">✦</span></div>';
   return `<a class="blog-card" href="${p.link}" target="_blank" rel="noopener">
     ${thumb}
     <div class="blog-card-body">
-      <div class="blog-card-meta"><span class="blog-card-date">${fmtDate(p.pubDate)}</span><span class="blog-card-tag">${p.tag}</span></div>
-      <h3>${p.title}</h3><p>${p.excerpt}…</p>
+      <div class="blog-card-meta">
+        <span class="blog-card-date">${fmtDate(p.pubDate)}</span>
+        <span class="blog-card-tag">${p.tag}</span>
+      </div>
+      <h3>${p.title}</h3>
+      <p>${p.excerpt}…</p>
       <span class="blog-card-link">Read on Medium ↗</span>
-    </div></a>`;
+    </div>
+  </a>`;
 }
+
+let allPosts = [], visibleCount = 0;
+const PAGE_SIZE = 9;
+
 function renderPosts(posts, append) {
   const grid = document.getElementById('blog-grid');
   if (!grid) return;
-  if (append) grid.innerHTML += posts.map(buildCard).join('');
-  else        grid.innerHTML  = posts.map(buildCard).join('');
+  const html = posts.map(buildCard).join('');
+  if (append) grid.innerHTML += html;
+  else        grid.innerHTML  = html;
   grid.style.display = 'grid';
 }
+
 function loadMorePosts() {
-  const next = allPosts.slice(visibleCount, visibleCount+PAGE_SIZE);
-  renderPosts(next, true); visibleCount += next.length;
+  const next = allPosts.slice(visibleCount, visibleCount + PAGE_SIZE);
+  renderPosts(next, true);
+  visibleCount += next.length;
   const w = document.getElementById('blog-more-wrap');
   if (w) w.style.display = visibleCount >= allPosts.length ? 'none' : 'block';
 }
+
 async function loadBlogPosts() {
-  const loading = document.getElementById('blog-loading');
-  const errorEl = document.getElementById('blog-error');
+  const loading  = document.getElementById('blog-loading');
+  const errorEl  = document.getElementById('blog-error');
   const moreWrap = document.getElementById('blog-more-wrap');
+
   if (loading) loading.style.display = 'flex';
   if (errorEl) errorEl.style.display = 'none';
-  for (const proxy of RSS_PROXIES) {
+  if (document.getElementById('blog-grid'))
+    document.getElementById('blog-grid').style.display = 'none';
+
+  const proxies = getRssProxies();
+  let lastError = '';
+
+  for (const proxy of proxies) {
     try {
-      const posts = await proxy();
-      if (!posts||!posts.length) continue;
-      allPosts = posts; visibleCount = 0;
+      console.log('[Blog] Trying proxy:', proxy.name);
+      const posts = await proxy.fetch();
+      if (!posts || posts.length === 0) {
+        console.warn('[Blog]', proxy.name, 'returned 0 posts');
+        continue;
+      }
+      console.log('[Blog]', proxy.name, 'success —', posts.length, 'posts');
+
+      allPosts = posts;
+      visibleCount = 0;
       if (loading) loading.style.display = 'none';
       renderPosts(allPosts.slice(0, PAGE_SIZE), false);
       visibleCount = Math.min(PAGE_SIZE, allPosts.length);
       if (moreWrap) moreWrap.style.display = allPosts.length > PAGE_SIZE ? 'block' : 'none';
-      return;
-    } catch(e) { console.warn('Blog proxy failed:', e.message); }
+      return; // done
+    } catch (err) {
+      console.warn('[Blog]', proxy.name, 'failed:', err.message);
+      lastError = err.message;
+    }
   }
+
+  // All proxies failed — show helpful error with direct link
   if (loading) loading.style.display = 'none';
   if (errorEl) {
-    errorEl.innerHTML = `<p>Could not load posts right now.</p>
-      <div style="margin-top:1.5rem;display:flex;gap:1rem;justify-content:center;flex-wrap:wrap">
-        <a href="https://medium.com/@${MEDIUM_USER}" target="_blank" rel="noopener" class="btn btn-lg btn-accent">Read on Medium ↗</a>
-        <button onclick="allPosts=[];loadBlogPosts()" class="btn blog-more-btn" style="padding:14px 28px">Try again</button>
-      </div>
-      <p style="margin-top:1.5rem;font-size:12px;color:var(--text-muted)">Tip: Make sure the Medium account has at least one published post.</p>`;
+    errorEl.innerHTML = `
+      <div class="blog-error-inner">
+        <p class="blog-error-msg">Posts could not be loaded automatically.</p>
+        <p class="blog-error-sub">This usually means the proxy service is temporarily unavailable.<br>All published posts are live on Medium.</p>
+        <div class="blog-error-actions">
+          <a href="https://medium.com/@${MEDIUM_USER}" target="_blank" rel="noopener" class="btn btn-lg btn-accent">
+            Read all posts on Medium ↗
+          </a>
+          <button onclick="allPosts=[];loadBlogPosts()" class="btn btn-lg btn-outline">
+            ↻ Try again
+          </button>
+        </div>
+      </div>`;
     errorEl.style.display = 'block';
   }
 }
